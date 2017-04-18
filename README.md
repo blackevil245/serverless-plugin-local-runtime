@@ -13,7 +13,8 @@ Add supports for local Node runtime with Serverless 0.5
   - In `s-project.json`, add to custom field as following
     ```javascript
       "custom": {
-        "local-node": { // Name of
+        "local-node": { // support only local-node
+          "deploymentVersion": 'nodejs6.10', // enum ['nodejs6.10', 'nodejs4.3'], defaults to 'nodejs4.3'
           "flags": [
             --harmony
             --harmony-async-await

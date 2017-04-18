@@ -11,11 +11,25 @@ const path = require('path');
 module.exports = function (S) {
 
   const SCli = require(S.getServerlessPath('utils/cli'));
+  const DEFAULT_DEPLOYMENT_VERSION = 'nodejs4.3';
 
   class LocalNodeRuntime extends S.classes.RuntimeNode43 {
 
     static getName() {
       return 'local-node';
+    }
+
+    getName() {
+      const project = S.getProject();
+      const deploymentVersion =
+            project.custom.runtime[LocalNodeRuntime.getName()].deploymentVersion
+            || DEFAULT_DEPLOYMENT_VERSION;
+
+      if (!['nodejs6.10', DEFAULT_DEPLOYMENT_VERSION].some(v => deploymentVersion === v)) {
+        throw new Error(`local-node runtime accepts only nodejs6.10 or ${DEFAULT_DEPLOYMENT_VERSION} for deployment. Got ${deploymentVersion}`);
+      }
+
+      return deploymentVersion;
     }
 
     run(func, stage, region, event) {
